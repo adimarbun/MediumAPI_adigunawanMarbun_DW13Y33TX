@@ -1,0 +1,7 @@
+npx sequelize-cli model:generate --name article --attributes title:string,content:string,image:string,category_aid:integer,author-id:integer
+
+npx sequelize-cli model:generate --name user --attributes name:string,username:varchar,email:varchar,password:varchar
+
+npx sequelize-cli model:generate --name follow --attributes user_id:integer,following_user_id
+
+npx sequelize-cli model:generate --name comment --attributes article_id:integer,user_id:integer,comment:string
