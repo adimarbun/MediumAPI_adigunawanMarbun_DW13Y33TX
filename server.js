@@ -26,6 +26,8 @@ app.group("/api/v1", router => {
   router.delete("/article/:id", auth, ArticlesController.delete);
   //login
   router.post("/login", Auth.login);
+  //register
+  router.post("/register", Auth.register);
 });
 
 app.use((err, req, res, next) => {
