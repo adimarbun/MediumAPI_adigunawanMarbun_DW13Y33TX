@@ -1,4 +1,5 @@
 const Categories = require("../models").categories;
+const Articles = require("../models").articles;
 
 exports.index = (req, res) => {
   Categories.findAll().then(categories => res.send(categories));

@@ -1,7 +1,15 @@
-const Article = require("../models").article;
-const Category = require("../models").category;
-const User = require("../models").user;
+const Articles = require("../models").articles;
+const Categories = require("../models").categories;
 
 exports.index = (req, res) => {
-  Articles.findAll().then(articles => res.send(articles));
+  Articles.findAll({
+    attributes: ["title", "content", "img", "createdAt", "updatedAt"],
+    include: [
+      {
+        model: Categories,
+        as: "categories",
+        attributes: ["id", "name"]
+      }
+    ]
+  }).then(data => res.send(data));
 };
