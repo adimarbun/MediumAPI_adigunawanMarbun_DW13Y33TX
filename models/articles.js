@@ -5,8 +5,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       title: DataTypes.STRING,
       category: DataTypes.INTEGER,
-      content: DataTypes.STRING,
-      img: DataTypes.STRING
+      content: DataTypes.TEXT,
+      img: DataTypes.STRING,
+      createdBy: DataTypes.INTEGER
     },
     {}
   );
@@ -14,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
     articles.belongsTo(models.categories, {
       foreignKey: "category",
       as: "categories",
+      sourceKey: "id"
+    });
+    articles.belongsTo(models.users, {
+      foreignKey: "createdBy",
+      as: "users",
       sourceKey: "id"
     });
   };
