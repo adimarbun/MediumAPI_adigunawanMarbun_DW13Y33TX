@@ -10,6 +10,7 @@ const ArticlesController = require("./controllers/articles");
 
 app.group("/api/v1", router => {
   router.get("/categories", CategoriesController.index);
+  router.get("/category/:id/articles", CategoriesController.show);
   router.post("/category", CategoriesController.store);
   router.get("/articles", ArticlesController.index);
 });

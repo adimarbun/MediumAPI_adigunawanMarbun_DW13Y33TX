@@ -13,3 +13,17 @@ exports.store = (req, res) => {
     });
   });
 };
+
+exports.show = (req, res) => {
+  Articles.findAll({
+    attributes: ["title", "content", "img", "createdAt", "updatedAt"],
+    include: [
+      {
+        model: Categories,
+        as: "categories",
+        attributes: ["id", "name"]
+      }
+    ],
+    where: { category: req.params.id }
+  }).then(category => res.send(category));
+};
