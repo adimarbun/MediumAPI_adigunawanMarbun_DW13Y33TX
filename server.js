@@ -10,29 +10,40 @@ const ArticlesController = require("./controllers/articles");
 const Auth = require("./controllers/auth");
 
 app.group("/api/v1", router => {
-  //show categories
+  //show categories task 1
   router.get("/categories", CategoriesController.index);
-  //create category
+  //create category task1
   router.post("/category", CategoriesController.store);
-  //show articles by category
+  //show articles by category task 3
   router.get("/category/:id/articles", CategoriesController.show);
-  //show articles
-  router.get("/articles", ArticlesController.index);
-  //create articles
-  router.post("/article", auth, ArticlesController.store);
-  //update articles
-  router.put("/article/:id", auth, ArticlesController.updateArticle);
-  //delete article
-  router.delete("/article/:id", auth, ArticlesController.delete);
+  //show all articles
+  router.get("/articless", ArticlesController.index);
+
+  //populer articles
+  router.get("/populer", ArticlesController.populerArticle);
+  //show article task 5
+  router.get("/articless/:id", ArticlesController.showArticle);
+
+  //show articles where user id= category id
+  router.get("/articles", authenticated, ArticlesController.show);
+  //create articles bearer token task 4
+  router.post("/article", authenticated, ArticlesController.store);
+  //update articles task 4
+  router.put("/article/:id", authenticated, ArticlesController.updateArticle);
+  //delete article task 4
+  router.delete("/article/:id", authenticated, ArticlesController.delete);
   //login
   router.post("/login", Auth.login);
   //register
   router.post("/register", Auth.register);
+
+  //get users
+  router.get("/users", Auth.showUsers);
 });
 
 app.use((err, req, res, next) => {
   if (err.name === "UnauthorizedError") {
-    res.status(401).json({ message: "You are not authorized" });
+    res.status(401).json({ message: "You are not authorizedd" });
   } else {
     next(err);
   }

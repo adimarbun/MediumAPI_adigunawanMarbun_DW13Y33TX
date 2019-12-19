@@ -12,7 +12,7 @@ exports.login = (req, res) => {
     where: { email, password }
   }).then(user => {
     if (user) {
-      const token = jwt.sign({ id: user.id }, "marbunn");
+      const token = jwt.sign({ id: user.id }, "thisismysecretkey");
       res.send({
         user,
         token
@@ -28,10 +28,19 @@ exports.login = (req, res) => {
 
 exports.register = (req, res) => {
   Users.create(req.body).then(user => {
-    const token = jwt.sign({ id: user.id }, "marbun");
+    const token = jwt.sign({ id: user.id }, "thisismysecretkey");
     res.send({
       email: user.email,
       token
     });
   });
+};
+
+exports.index = (req, res) => {
+  Categories.findAll({ attributes: ["id", "name"] }).then(data =>
+    res.send(data)
+  );
+};
+exports.showUsers = (req, res) => {
+  Users.findAll().then(user => res.send(user));
 };

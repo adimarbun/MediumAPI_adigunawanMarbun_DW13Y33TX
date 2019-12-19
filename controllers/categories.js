@@ -1,10 +1,14 @@
 const Categories = require("../models").categories;
 const Articles = require("../models").articles;
 
+//show all categories task 1
 exports.index = (req, res) => {
-  Categories.findAll().then(categories => res.send(categories));
+  Categories.findAll({ attributes: ["id", "name"] }).then(data =>
+    res.send(data)
+  );
 };
 
+//create category task 1
 exports.store = (req, res) => {
   Categories.create(req.body).then(categories => {
     res.send({
@@ -14,9 +18,10 @@ exports.store = (req, res) => {
   });
 };
 
+//get article by category task 3
 exports.show = (req, res) => {
   Articles.findAll({
-    attributes: ["title", "content", "img", "createdAt", "updatedAt"],
+    attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
     include: [
       {
         model: Categories,
