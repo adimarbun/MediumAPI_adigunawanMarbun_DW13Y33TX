@@ -19,6 +19,9 @@ app.group("/api/v1", router => {
   //show all articles
   router.get("/articless", ArticlesController.index);
 
+  //show article by person
+  router.get("/user/:id/articles", ArticlesController.showByUser);
+
   //populer articles
   router.get("/populer", ArticlesController.populerArticle);
   //show article task 5

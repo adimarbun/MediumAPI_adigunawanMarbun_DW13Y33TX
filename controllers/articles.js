@@ -41,6 +41,22 @@ exports.index = (req, res) => {
   }).then(data => res.send(data));
 };
 
+//show article by person taks 9
+
+exports.showByUser = (req, res) => {
+  Articles.findAll({
+    attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
+    include: [
+      {
+        model: Categories,
+        as: "categories",
+        attributes: ["id", "name"]
+      }
+    ],
+    where: { createdBy: req.params.id }
+  }).then(data => res.send(data));
+};
+
 //create article
 exports.store = (req, res) => {
   let token = getToken(req.headers["authorization"]);
