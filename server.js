@@ -18,6 +18,13 @@ app.group("/api/v1", router => {
   router.get("/category/:id/articles", CategoriesController.show);
   //show all articles TASK 2
   router.get("/articless", ArticlesController.index);
+<<<<<<< HEAD
+=======
+
+  //show article by person
+  router.get("/user/:id/articles", ArticlesController.showByUser);
+
+>>>>>>> 98351e3d90a3df54fd0e4862e35f98e7cbe3266d
   //populer articles
   router.get("/populer", ArticlesController.populerArticle);
   //show article task 5
