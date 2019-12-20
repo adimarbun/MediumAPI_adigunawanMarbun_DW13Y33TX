@@ -16,14 +16,12 @@ app.group("/api/v1", router => {
   router.post("/category", CategoriesController.store);
   //show articles by category task 3
   router.get("/category/:id/articles", CategoriesController.show);
-  //show all articles
+  //show all articles TASK 2
   router.get("/articless", ArticlesController.index);
-
   //populer articles
   router.get("/populer", ArticlesController.populerArticle);
   //show article task 5
-  router.get("/articless/:id", ArticlesController.showArticle);
-
+  router.get("/article/:id", ArticlesController.showArticle);
   //show articles where user id= category id
   router.get("/articles", authenticated, ArticlesController.show);
   //create articles bearer token task 4
@@ -36,7 +34,6 @@ app.group("/api/v1", router => {
   router.post("/login", Auth.login);
   //register
   router.post("/register", Auth.register);
-
   //get users
   router.get("/users", Auth.showUsers);
 });
