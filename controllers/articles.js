@@ -59,50 +59,33 @@ exports.showByUser = (req, res) => {
 
 //create article
 exports.store = (req, res) => {
-  let token = getToken(req.headers["authorization"]);
-
-  jwt.verify(token, "thisismysecretkey", (err, authorized) => {
-    if (err) {
-      return res.sendStatus(403);
-    } else {
-      let userId = getId(authorized);
-
-      request = {
-        title: req.body.title,
-        category: req.body.category,
-        content: req.body.content,
-        img: req.body.img,
-        createdBy: userId
-      };
-      Articles.create(request).then(response => {
-        let idArticle = getId(response);
-        Articles.findOne({
-          attributes: [
-            "id",
-            "title",
-            "content",
-            "img",
-            "createdAt",
-            "updatedAt"
-          ],
-          include: [
-            {
-              model: Categories,
-              as: "categories",
-              attributes: ["id", "name"]
-            },
-            {
-              model: Users,
-              as: "users",
-              attributes: ["id", "name"]
-            }
-          ],
-          where: { id: idArticle }
-        }).then(response => {
-          res.send(response);
-        });
-      });
-    }
+  request = {
+    title: req.body.title,
+    category: req.body.category,
+    content: req.body.content,
+    img: req.body.img,
+    createdBy: userId
+  };
+  Articles.create(request).then(response => {
+    let idArticle = getId(response);
+    Articles.findOne({
+      attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
+      include: [
+        {
+          model: Categories,
+          as: "categories",
+          attributes: ["id", "name"]
+        },
+        {
+          model: Users,
+          as: "users",
+          attributes: ["id", "name"]
+        }
+      ],
+      where: { id: idArticle }
+    }).then(response => {
+      res.send(response);
+    });
   });
 };
 
@@ -170,58 +153,50 @@ exports.show = (req, res) => {
 //put update articel
 
 exports.updateArticle = (req, res) => {
-  let token = getToken(req.headers["authorization"]);
-  jwt.verify(token, "thisismysecretkey", (err, authorized) => {
-    if (err) {
-      return res.sendStatus(403);
-    } else {
-      let userId = getId(authorized);
-      let articleId = req.params.id;
-      Articles.findOne({
-        where: { id: articleId, createdBy: userId }
-      }).then(response => {
-        if (response) {
-          let request = {
-            title: req.body.title,
-            category: req.body.category,
-            content: req.body.content,
-            img: req.body.img,
-            createdBy: userId
-          };
+  let articleId = req.params.id;
+  Articles.findOne({
+    where: { id: articleId, createdBy: userId }
+  }).then(response => {
+    if (response) {
+      let request = {
+        title: req.body.title,
+        category: req.body.category,
+        content: req.body.content,
+        img: req.body.img,
+        createdBy: userId
+      };
 
-          Articles.update(request, {
-            where: { id: articleId }
-          }).then(() => {
-            Articles.findOne({
-              attributes: [
-                "id",
-                "title",
-                "content",
-                "img",
-                "createdAt",
-                "updatedAt"
-              ],
-              include: [
-                {
-                  model: Categories,
-                  as: "categories",
-                  attributes: ["id", "name"]
-                },
-                {
-                  model: Users,
-                  as: "users",
-                  attributes: ["id", "name"]
-                }
-              ],
-              where: { id: req.params.id }
-            }).then(response => {
-              res.send(response);
-            });
-          });
-        } else {
-          res.send({ message: "Not your Article" });
-        }
+      Articles.update(request, {
+        where: { id: articleId }
+      }).then(() => {
+        Articles.findOne({
+          attributes: [
+            "id",
+            "title",
+            "content",
+            "img",
+            "createdAt",
+            "updatedAt"
+          ],
+          include: [
+            {
+              model: Categories,
+              as: "categories",
+              attributes: ["id", "name"]
+            },
+            {
+              model: Users,
+              as: "users",
+              attributes: ["id", "name"]
+            }
+          ],
+          where: { id: req.params.id }
+        }).then(response => {
+          res.send(response);
+        });
       });
+    } else {
+      res.send({ message: "Not your Article" });
     }
   });
 };
@@ -229,29 +204,21 @@ exports.updateArticle = (req, res) => {
 //delete article
 
 exports.delete = (req, res) => {
-  let token = getToken(req.headers["authorization"]);
-  jwt.verify(token, "thisismysecretkey", (err, authorized) => {
-    if (err) {
-      return res.sendStatus(403);
-    } else {
-      let userId = getId(authorized);
-      let articleId = req.params.id;
-      Articles.findOne({
-        where: { id: articleId, createdBy: userId }
-      }).then(response => {
-        if (response) {
-          Articles.destroy({
-            where: { id: articleId }
-          }).then(data => {
-            res.send({
-              message: "success",
-              data
-            });
-          });
-        } else {
-          res.send({ message: "Not your Article" });
-        }
+  let articleId = req.params.id;
+  Articles.findOne({
+    where: { id: articleId, createdBy: userId }
+  }).then(response => {
+    if (response) {
+      Articles.destroy({
+        where: { id: articleId }
+      }).then(data => {
+        res.send({
+          message: "success",
+          data
+        });
       });
+    } else {
+      res.send({ message: "Not your Article" });
     }
   });
 };
@@ -288,4 +255,29 @@ exports.showArticle = (req, res) => {
     ],
     where: { id: req.params.id }
   }).then(data => res.send(data));
+};
+
+//comment
+
+exports.createComment = (req, res) => {
+  request = {
+    userId: userId,
+    articleId: req.params.id,
+    comment: req.body.comment
+  };
+  Comments.create(request).then(data => {
+    Comments.findOne({
+      attributes: ["id", "comment"],
+      include: [
+        {
+          model: Articles,
+          as: "articles",
+          attributes: ["id", "title"]
+        }
+      ],
+      where: { id: data.id }
+    }).then(response => {
+      res.send(response);
+    });
+  });
 };

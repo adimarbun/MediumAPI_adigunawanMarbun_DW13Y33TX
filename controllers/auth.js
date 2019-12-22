@@ -12,9 +12,10 @@ exports.login = (req, res) => {
     where: { email, password }
   }).then(user => {
     if (user) {
-      const token = jwt.sign({ id: user.id }, "thisismysecretkey");
+      const token = jwt.sign({ user }, "thisismysecretkey");
       res.send({
-        user,
+        userId: user.id,
+        username: user.username,
         token
       });
     } else {
