@@ -2,25 +2,6 @@ const Articles = require("../models").articles;
 const Categories = require("../models").categories;
 const Users = require("../models").users;
 const Comments = require("../models").comments;
-const { authorized } = require("../middleware");
-
-const jwt = require("jsonwebtoken");
-
-//get id
-
-function getId(data) {
-  let id = JSON.stringify(data);
-  id = id.split(",");
-  id = id[0].substring(6, data.length);
-  return id;
-}
-//get token from header
-function getToken(reqHeader) {
-  let token = reqHeader;
-  token = token.split(" ");
-  token = token[1];
-  return token;
-}
 
 //show articles
 exports.index = (req, res) => {
@@ -67,7 +48,6 @@ exports.store = (req, res) => {
     createdBy: userId
   };
   Articles.create(request).then(response => {
-    let idArticle = getId(response);
     Articles.findOne({
       attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
       include: [
@@ -82,72 +62,38 @@ exports.store = (req, res) => {
           attributes: ["id", "name"]
         }
       ],
-      where: { id: idArticle }
+      where: { id: response.id }
     }).then(response => {
       res.send(response);
     });
   });
 };
 
-// //delete article
-// exports.delete = (req, res) => {
-//   Articles.destroy({ where: { id: req.params.id } }).then(data => {
-//     res.send({
-//       message: "success",
-//       data
-//     });
-//   });
-// };
-
-// exports.show = (req, res) => {
-//   Articles.findAll({
-//     attributes: ["title", "content", "img", "createdAt", "updatedAt"],
-//     include: [
-//       {
-//         model: Categories,
-//         as: "categories",
-//         attributes: ["id", "name"]
-//       }
-//     ],
-//     where: { category: req.params.id }
-//   }).then(category => res.send(category));
-// };
-
 //show articles when idname=createdBy
 exports.show = (req, res) => {
-  let token = getToken(req.headers["authorization"]);
-
-  jwt.verify(token, "thisismysecretkey", (err, authorized) => {
-    if (err) {
-      return res.sendStatus(403);
-    } else {
-      let userId = getId(authorized);
-
-      request = {
-        title: req.body.title,
-        category: req.body.category,
-        content: req.body.content,
-        img: req.body.img,
-        createdBy: userId
-      };
-      Articles.findAll({
-        attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
-        include: [
-          {
-            model: Categories,
-            as: "categories",
-            attributes: ["id", "name"]
-          },
-          {
-            model: Users,
-            as: "users",
-            attributes: ["id", "name"]
-          }
-        ],
-        where: { createdBy: userId }
-      }).then(category => res.send(category));
-    }
-  });
+  request = {
+    title: req.body.title,
+    category: req.body.category,
+    content: req.body.content,
+    img: req.body.img,
+    createdBy: userId
+  };
+  Articles.findAll({
+    attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
+    include: [
+      {
+        model: Categories,
+        as: "categories",
+        attributes: ["id", "name"]
+      },
+      {
+        model: Users,
+        as: "users",
+        attributes: ["id", "name"]
+      }
+    ],
+    where: { createdBy: userId }
+  }).then(category => res.send(category));
 };
 
 //put update articel
@@ -257,7 +203,7 @@ exports.showArticle = (req, res) => {
   }).then(data => res.send(data));
 };
 
-//comment
+// create comment
 
 exports.createComment = (req, res) => {
   request = {
@@ -280,4 +226,74 @@ exports.createComment = (req, res) => {
       res.send(response);
     });
   });
+};
+
+//update comment
+
+exports.updateComment = (req, res) => {
+  Comments.findOne({
+    where: { id: req.params.id, userId: userId }
+  }).then(respon => {
+    if (respon) {
+      let request = {
+        userId: userId,
+        articleId: req.params.id,
+        comment: req.body.comment
+      };
+      Comments.update(request, {
+        where: { id: respon.id }
+      }).then(() => {
+        Comments.findOne({
+          attributes: ["id", "comment"],
+          include: [
+            {
+              model: Articles,
+              as: "articles",
+              attributes: ["id", "title"]
+            }
+          ],
+          where: { id: req.params.id }
+        }).then(response => {
+          res.send(response);
+        });
+      });
+    } else {
+      res.send({ message: "Not your Comment" });
+    }
+  });
+};
+
+//delete comment
+exports.deleteComment = (req, res) => {
+  Comments.findOne({
+    where: { id: req.params.id, userId: userId }
+  }).then(respon => {
+    if (respon) {
+      Comments.destroy({
+        where: { id: req.params.id }
+      }).then(data => {
+        res.send({
+          message: "success",
+          data
+        });
+      });
+    } else {
+      res.send({ message: "Not your Article" });
+    }
+  });
+};
+
+//show comment where id article
+exports.showComment = (req, res) => {
+  Comments.findAll({
+    where: { articleId: req.params.id },
+    attributes: ["id", "comment", "createdAt", "updatedAt"],
+    include: [
+      {
+        model: Articles,
+        as: "articles",
+        attributes: ["id", "title"]
+      }
+    ]
+  }).then(data => res.send(data));
 };
