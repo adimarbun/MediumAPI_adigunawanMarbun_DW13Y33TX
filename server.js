@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 const CategoriesController = require("./controllers/categories");
 const ArticlesController = require("./controllers/articles");
 const Auth = require("./controllers/auth");
+const FollowsController = require("./controllers/follow");
 
 app.group("/api/v1", router => {
   //show categories task 1
@@ -48,6 +49,9 @@ app.group("/api/v1", router => {
   router.delete("/article/:id/comment", auth, ArticlesController.deleteComment);
   //get all comment where id article
   router.get("/article/:id/comment", ArticlesController.showComment);
+
+  //follow
+  router.post("/follow", auth, FollowsController.follow);
 });
 
 app.use((err, req, res, next) => {
