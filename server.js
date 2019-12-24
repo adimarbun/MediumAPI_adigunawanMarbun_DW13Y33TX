@@ -1,5 +1,5 @@
 require("express-group-routes");
-const { auth, authorized, authenticated } = require("./middleware");
+const { auth } = require("./middleware");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
@@ -9,6 +9,7 @@ const CategoriesController = require("./controllers/categories");
 const ArticlesController = require("./controllers/articles");
 const Auth = require("./controllers/auth");
 const FollowsController = require("./controllers/follow");
+const CommentsController = require("./controllers/comments");
 
 app.group("/api/v1", router => {
   //show categories task 1
@@ -19,10 +20,8 @@ app.group("/api/v1", router => {
   router.get("/category/:id/articles", CategoriesController.show);
   //show all articles TASK 2
   router.get("/articless", ArticlesController.index);
-
   //show article by person
   router.get("/user/:id/articles", ArticlesController.showByUser);
-
   //populer articles
   router.get("/populer", ArticlesController.populerArticle);
   //show article task 5
@@ -42,14 +41,25 @@ app.group("/api/v1", router => {
   //get users
   router.get("/users", Auth.showUsers);
   //post comment
-  router.post("/article/:id/comment", auth, ArticlesController.createComment);
+  router.post(
+    "/article/:idArticle/comment",
+    auth,
+    CommentsController.createComment
+  );
   //update comment
-  router.put("/article/:id/comment", auth, ArticlesController.updateComment);
+  router.put(
+    "/article/:idArticle/comment/:id",
+    auth,
+    CommentsController.updateComment
+  );
   //delete comment
-  router.delete("/article/:id/comment", auth, ArticlesController.deleteComment);
+  router.delete(
+    "/article/:idArticle/comment/:id",
+    auth,
+    CommentsController.deleteComment
+  );
   //get all comment where id article
-  router.get("/article/:id/comment", ArticlesController.showComment);
-
+  router.get("/article/:id/comment", CommentsController.showComment);
   //follow
   router.post("/follow", auth, FollowsController.follow);
 });
