@@ -171,8 +171,22 @@ exports.delete = (req, res) => {
 
 //get populer articles
 
-exports.populerArticle = (req, res) => {
-  Articles.findAll().then(article => {
+exports.popularArticle = (req, res) => {
+  Articles.findAll({
+    attributes: ["id", "title", "content", "img", "createdAt", "updatedAt"],
+    include: [
+      {
+        model: Users,
+        as: "users",
+        attributes: ["id", "name"]
+      },
+      {
+        model: Categories,
+        as: "categories",
+        attributes: ["id", "name"]
+      }
+    ]
+  }).then(article => {
     let data = [];
     for (let i = 0; i < 10; i++) {
       max = article.length - 1;

@@ -3,13 +3,16 @@ const { auth } = require("./middleware");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 const CategoriesController = require("./controllers/categories");
 const ArticlesController = require("./controllers/articles");
 const Auth = require("./controllers/auth");
 const FollowsController = require("./controllers/follow");
 const CommentsController = require("./controllers/comments");
+const cors = require("cors");
+
+app.use(cors());
 
 app.group("/api/v1", router => {
   //show categories task 1
@@ -23,7 +26,7 @@ app.group("/api/v1", router => {
   //show article by person
   router.get("/user/:id/articles", ArticlesController.showByUser);
   //populer articles
-  router.get("/populer", ArticlesController.populerArticle);
+  router.get("/popular", ArticlesController.popularArticle);
   //show article task 5
   router.get("/article/:id", ArticlesController.showArticle);
   //show articles where user id= category id
@@ -64,12 +67,12 @@ app.group("/api/v1", router => {
   router.post("/follow", auth, FollowsController.follow);
 });
 
-app.use((err, req, res, next) => {
-  if (err.name === "UnauthorizedError") {
-    res.status(401).json({ message: "You are not authorizedd" });
-  } else {
-    next(err);
-  }
-});
+// app.use((err, req, res, next) => {
+//   if (err.name === "UnauthorizedError") {
+//     res.status(401).json({ message: "You are not authorizedd" });
+//   } else {
+//     next(err);
+//   }
+// });
 
 app.listen(port, () => console.log(`listening on port ${port}`));
