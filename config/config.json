@@ -1,5 +1,6 @@
 {
   "development": {
+    "use_env_variable": "DATABASE_URL",
     "username": "root",
     "password": null,
     "database": "medium",
@@ -19,7 +20,7 @@
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
     "protocol": "postgres",
-    "host": " https://medium-api-backend.herokuapp.com/",
+    "host": "https://medium-api-backend.herokuapp.com/",
     "dialectOptions": {
       "ssl": true
     }
