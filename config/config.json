@@ -16,13 +16,13 @@
     "dialect": "mysql",
     "operatorsAliases": false
   },
-  "production": {
-    "use_env_variable": "DATABASE_URL",
-    "dialect": "postgres",
-    "protocol": "postgres",
-    "host": "https://medium-api-backend.herokuapp.com/",
-    "dialectOptions": {
-      "ssl": true
-    }
+  // "production": {
+  //   "use_env_variable": "DATABASE_URL",
+  //   "dialect": "postgres",
+  //   "protocol": "postgres",
+  //   "host": "https://medium-api-backend.herokuapp.com/",
+  //   "dialectOptions": {
+  //     "ssl": true
+  //   }
   }
 }

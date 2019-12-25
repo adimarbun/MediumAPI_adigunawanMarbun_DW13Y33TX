@@ -4,7 +4,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 app.use(bodyParser.json());
 const CategoriesController = require("./controllers/categories");
