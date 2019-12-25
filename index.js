@@ -3,7 +3,7 @@ const { auth } = require("./middleware");
 const express = require("express");
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || "development";
 app.use(bodyParser.json());
 const CategoriesController = require("./controllers/categories");
 const ArticlesController = require("./controllers/articles");
