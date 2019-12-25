@@ -12,9 +12,6 @@ const ArticlesController = require("./controllers/articles");
 const Auth = require("./controllers/auth");
 const FollowsController = require("./controllers/follow");
 const CommentsController = require("./controllers/comments");
-const cors = require("cors");
-
-app.use(cors());
 
 app.group("/api/v1", router => {
   //show categories task 1
