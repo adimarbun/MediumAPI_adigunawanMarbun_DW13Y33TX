@@ -19,7 +19,7 @@
     "use_env_variable": "DATABASE_URL",
     "dialect": "postgres",
     "protocol": "postgres",
-    "host": "https://medium-api-dumbways.herokuapp.com/",
+    "host": " https://medium-api-backend.herokuapp.com/",
     "dialectOptions": {
       "ssl": true
     }
