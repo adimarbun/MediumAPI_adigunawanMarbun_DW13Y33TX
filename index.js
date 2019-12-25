@@ -3,7 +3,9 @@ const { auth } = require("./middleware");
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+
 const port = process.env.PORT || 5000;
+
 app.use(bodyParser.json());
 const CategoriesController = require("./controllers/categories");
 const ArticlesController = require("./controllers/articles");
